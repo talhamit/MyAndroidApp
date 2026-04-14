@@ -9,7 +9,8 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true   # 👈 FIX
+      # Forces actions targeting Node 20 to run on Node 24 to suppress warnings
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
       - name: Checkout Code
@@ -20,6 +21,8 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+          # This caches your Gradle dependencies automatically
+          cache: 'gradle'
 
       - name: Grant Permission
         run: chmod +x gradlew
