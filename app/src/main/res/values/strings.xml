@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">SpeakMate</string>
+    <string name="tagline">Master English Speaking</string>
+
+    <!-- Home -->
+    <string name="speaking_practice">Speaking Practice</string>
+    <string name="daily_conversation">Daily Conversation</string>
+    <string name="sentence_game">Sentence Builder</string>
+    <string name="repeat_after_me">Repeat After Me</string>
+    <string name="ai_conversation">AI Conversation</string>
+    <string name="progress">My Progress</string>
+
+    <!-- Misc -->
+    <string name="tap_mic">Tap mic to speak</string>
+    <string name="listening">Listening…</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="check">Check Answer</string>
+    <string name="save">Save Settings</string>
+    <string name="settings">Settings</string>
+</resources>

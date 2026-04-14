@@ -1,0 +1,45 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme -->
+    <style name="Theme.SpeakMate" parent="Theme.MaterialComponents.Light.DarkActionBar">
+        <item name="colorPrimary">@color/primary_blue</item>
+        <item name="colorPrimaryVariant">@color/primary_blue_dark</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/accent_teal</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="android:colorBackground">@color/bg_surface</item>
+        <item name="colorSurface">@color/bg_card</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="actionBarStyle">@style/SpeakMateActionBar</item>
+    </style>
+
+    <style name="SpeakMateActionBar" parent="Widget.MaterialComponents.ActionBar.Solid">
+        <item name="background">@color/primary_blue</item>
+        <item name="titleTextStyle">@style/ActionBarTitle</item>
+    </style>
+
+    <style name="ActionBarTitle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <!-- Splash screen theme – no action bar -->
+    <style name="Theme.SpeakMate.Splash" parent="Theme.SpeakMate">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/primary_blue</item>
+        <item name="android:statusBarColor">@color/primary_blue_dark</item>
+    </style>
+
+    <!-- Card styles -->
+    <style name="FeatureCard" parent="Widget.MaterialComponents.CardView">
+        <item name="cardCornerRadius">16dp</item>
+        <item name="cardElevation">4dp</item>
+        <item name="android:layout_margin">8dp</item>
+    </style>
+
+    <!-- Mic FAB -->
+    <style name="MicFab" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="backgroundTint">@color/primary_blue</item>
+        <item name="tint">@color/white</item>
+    </style>
+</resources>

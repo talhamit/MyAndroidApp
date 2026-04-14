@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand -->
+    <color name="primary_blue">#1565C0</color>
+    <color name="primary_blue_light">#E3F2FD</color>
+    <color name="primary_blue_dark">#0D47A1</color>
+    <color name="accent_teal">#00ACC1</color>
+
+    <!-- Backgrounds -->
+    <color name="bg_white">#FFFFFF</color>
+    <color name="bg_surface">#F8FAFD</color>
+    <color name="bg_card">#FFFFFF</color>
+
+    <!-- Text -->
+    <color name="text_primary">#1A1A2E</color>
+    <color name="text_secondary">#5C6B7A</color>
+    <color name="text_hint">#9E9E9E</color>
+
+    <!-- Feedback colours -->
+    <color name="correct_green">#2E7D32</color>
+    <color name="correct_green_bg">#E8F5E9</color>
+    <color name="error_red">#C62828</color>
+    <color name="error_red_bg">#FFEBEE</color>
+    <color name="warning_amber">#F57F17</color>
+    <color name="warning_amber_bg">#FFF8E1</color>
+
+    <!-- UI elements -->
+    <color name="white">#FFFFFF</color>
+    <color name="divider">#E0E0E0</color>
+    <color name="chip_background">#EEF2FF</color>
+    <color name="mic_active">#E53935</color>
+
+    <!-- Card colors for home screen -->
+    <color name="card_practice">#E8F5E9</color>
+    <color name="card_conversation">#E3F2FD</color>
+    <color name="card_game">#FFF3E0</color>
+    <color name="card_repeat">#F3E5F5</color>
+    <color name="card_ai">#E0F7FA</color>
+    <color name="card_progress">#FCE4EC</color>
+</resources>

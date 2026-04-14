@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <!-- Home -->
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.speakmate.app.ui.home.HomeFragment"
+        android:label="SpeakMate"
+        tools:layout="@layout/fragment_home">
+
+        <action android:id="@+id/action_home_to_practice"
+            app:destination="@id/practiceFragment"
+            app:enterAnim="@anim/slide_up_fade_in" />
+        <action android:id="@+id/action_home_to_conversation"
+            app:destination="@id/conversationFragment"
+            app:enterAnim="@anim/slide_up_fade_in" />
+        <action android:id="@+id/action_home_to_game"
+            app:destination="@id/gameFragment"
+            app:enterAnim="@anim/slide_up_fade_in" />
+        <action android:id="@+id/action_home_to_repeat"
+            app:destination="@id/repeatFragment"
+            app:enterAnim="@anim/slide_up_fade_in" />
+        <action android:id="@+id/action_home_to_ai"
+            app:destination="@id/aiConversationFragment"
+            app:enterAnim="@anim/slide_up_fade_in" />
+        <action android:id="@+id/action_home_to_progress"
+            app:destination="@id/progressFragment"
+            app:enterAnim="@anim/slide_up_fade_in" />
+        <action android:id="@+id/action_home_to_settings"
+            app:destination="@id/settingsFragment"
+            app:enterAnim="@anim/slide_up_fade_in" />
+    </fragment>
+
+    <!-- Speaking Practice -->
+    <fragment
+        android:id="@+id/practiceFragment"
+        android:name="com.speakmate.app.ui.practice.PracticeFragment"
+        android:label="Speaking Practice"
+        tools:layout="@layout/fragment_practice" />
+
+    <!-- Daily Conversation -->
+    <fragment
+        android:id="@+id/conversationFragment"
+        android:name="com.speakmate.app.ui.conversation.ConversationFragment"
+        android:label="Daily Conversation"
+        tools:layout="@layout/fragment_conversation" />
+
+    <!-- Sentence Builder Game -->
+    <fragment
+        android:id="@+id/gameFragment"
+        android:name="com.speakmate.app.ui.game.GameFragment"
+        android:label="Sentence Builder"
+        tools:layout="@layout/fragment_game" />
+
+    <!-- Repeat After Me -->
+    <fragment
+        android:id="@+id/repeatFragment"
+        android:name="com.speakmate.app.ui.practice.RepeatAfterMeFragment"
+        android:label="Repeat After Me"
+        tools:layout="@layout/fragment_repeat" />
+
+    <!-- AI Conversation -->
+    <fragment
+        android:id="@+id/aiConversationFragment"
+        android:name="com.speakmate.app.ui.conversation.AIConversationFragment"
+        android:label="AI Conversation"
+        tools:layout="@layout/fragment_ai_conversation" />
+
+    <!-- Progress -->
+    <fragment
+        android:id="@+id/progressFragment"
+        android:name="com.speakmate.app.ui.progress.ProgressFragment"
+        android:label="My Progress"
+        tools:layout="@layout/fragment_progress" />
+
+    <!-- Settings -->
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.speakmate.app.ui.settings.SettingsFragment"
+        android:label="Settings"
+        tools:layout="@layout/fragment_settings" />
+
+</navigation>

@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_surface">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Progress & Category row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:id="@+id/tvCategory"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Basic"
+                android:textColor="@color/primary_blue"
+                android:textSize="13sp"
+                android:background="@drawable/bg_chip_blue"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="4dp" />
+
+            <TextView
+                android:id="@+id/tvProgress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1 / 18"
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <!-- Sentence Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="@color/white">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="SAY THIS"
+                    android:textSize="11sp"
+                    android:letterSpacing="0.1"
+                    android:textColor="@color/text_hint"
+                    android:layout_marginBottom="8dp" />
+
+                <TextView
+                    android:id="@+id/tvSentence"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Good morning, how are you today?"
+                    android:textSize="22sp"
+                    android:textColor="@color/text_primary"
+                    android:lineSpacingMultiplier="1.3"
+                    android:textStyle="bold" />
+
+                <!-- Tip -->
+                <TextView
+                    android:id="@+id/tvTip"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="💡 Stress 'morning' and 'today'"
+                    android:textSize="13sp"
+                    android:textColor="@color/warning_amber"
+                    android:visibility="gone" />
+
+                <!-- Listen button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnListen"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="▶ Hear It"
+                    app:strokeColor="@color/primary_blue"
+                    android:textColor="@color/primary_blue" />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Mic Section -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="@color/white">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="24dp">
+
+                <!-- Pulse animation view -->
+                <FrameLayout
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center">
+
+                    <View
+                        android:id="@+id/micPulse"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:background="@drawable/bg_mic_pulse"
+                        android:visibility="gone" />
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/btnMic"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:src="@android:drawable/ic_btn_speak_now"
+                        app:backgroundTint="@color/primary_blue"
+                        app:tint="@color/white"
+                        app:fabSize="normal" />
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/tvMicHint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="Tap mic to speak"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="14sp" />
+
+                <!-- Real-time recognized text -->
+                <TextView
+                    android:id="@+id/tvRecognizedText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text=""
+                    android:textSize="16sp"
+                    android:textColor="@color/text_primary"
+                    android:gravity="center"
+                    android:minHeight="48dp" />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Result Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardResult"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="@color/white">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/tvScore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="85%"
+                    android:textSize="48sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/correct_green"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tvGrade"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Great job! 👍"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_secondary"
+                    android:layout_marginTop="4dp"
+                    android:visibility="gone" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/divider"
+                    android:layout_marginVertical="12dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="WORD BY WORD"
+                    android:textSize="11sp"
+                    android:letterSpacing="0.1"
+                    android:textColor="@color/text_hint"
+                    android:layout_marginBottom="8dp" />
+
+                <!-- Highlighted word comparison -->
+                <TextView
+                    android:id="@+id/tvHighlightedResult"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:lineSpacingMultiplier="1.5"
+                    android:gravity="center" />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Navigation buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="24dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnPrevious"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:text="← Prev"
+                app:strokeColor="@color/primary_blue"
+                android:textColor="@color/primary_blue" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnNext"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:text="Next →"
+                app:backgroundTint="@color/primary_blue" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
