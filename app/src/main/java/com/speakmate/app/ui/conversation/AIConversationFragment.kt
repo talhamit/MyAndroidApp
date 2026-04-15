@@ -18,8 +18,7 @@ import com.speakmate.app.viewmodel.ViewModelFactory
 
 /**
  * AI Conversation Mode.
- * User speaks → text sent to OpenAI → response read aloud via TTS.
- * Requires an API key set in Settings.
+ * FIX #10: Guards all callbacks and view accesses with _binding != null.
  */
 class AIConversationFragment : Fragment() {
 
@@ -30,7 +29,7 @@ class AIConversationFragment : Fragment() {
         ViewModelFactory(requireActivity().application)
     }
 
-    private lateinit var tts: TextToSpeechHelper
+    private var tts: TextToSpeechHelper? = null
     private var speechRecognizer: SpeechRecognizerHelper? = null
     private lateinit var chatAdapter: ChatAdapter
     private lateinit var prefs: PrefsManager
@@ -48,23 +47,24 @@ class AIConversationFragment : Fragment() {
         prefs = PrefsManager(requireContext())
         viewModel.initialise(prefs.openAiApiKey)
 
-        // TTS
         tts = TextToSpeechHelper(requireContext())
 
-        // Speech recognizer
         if (SpeechRecognizerHelper.isAvailable(requireContext())) {
             speechRecognizer = SpeechRecognizerHelper(
                 context       = requireContext(),
                 onResult      = { text ->
-                    binding.etMessage.setText(text)
-                    viewModel.sendMessage(text)
+                    view.post {
+                        if (_binding != null) {
+                            binding.etMessage.setText(text)
+                            viewModel.sendMessage(text)
+                        }
+                    }
                 },
-                onError       = { msg -> showToast(msg) },
-                onStateChange = { listening -> viewModel.onListeningStateChanged(listening) }
+                onError       = { msg -> view.post { if (_binding != null) showToast(msg) } },
+                onStateChange = { listening -> view.post { if (_binding != null) viewModel.onListeningStateChanged(listening) } }
             )
         }
 
-        // RecyclerView
         chatAdapter = ChatAdapter()
         binding.rvChat.apply {
             layoutManager = LinearLayoutManager(requireContext()).also { it.stackFromEnd = true }
@@ -74,7 +74,6 @@ class AIConversationFragment : Fragment() {
         observeViewModel()
         setupClickListeners()
 
-        // Show API key warning if not configured
         if (prefs.openAiApiKey.isBlank()) {
             binding.cardApiWarning.visibility = View.VISIBLE
         }
@@ -100,7 +99,7 @@ class AIConversationFragment : Fragment() {
 
         viewModel.latestReply.observe(viewLifecycleOwner) { reply ->
             reply?.let {
-                tts.speak(it)
+                tts?.speak(it)
                 viewModel.clearLatestReply()
             }
         }
@@ -111,7 +110,6 @@ class AIConversationFragment : Fragment() {
     }
 
     private fun setupClickListeners() {
-        // Send typed message
         binding.btnSend.setOnClickListener {
             val text = binding.etMessage.text?.toString()?.trim() ?: return@setOnClickListener
             if (text.isBlank()) return@setOnClickListener
@@ -119,7 +117,6 @@ class AIConversationFragment : Fragment() {
             binding.etMessage.setText("")
         }
 
-        // Voice input
         binding.btnMic.setOnClickListener {
             if (!PermissionHelper.hasAudioPermission(requireContext())) {
                 PermissionHelper.requestAudioPermission(requireActivity())
@@ -129,16 +126,17 @@ class AIConversationFragment : Fragment() {
             if (sr.isListening()) sr.stopListening() else sr.startListening()
         }
 
-        // Clear chat
         binding.btnClear.setOnClickListener { viewModel.clearChat() }
     }
 
-    private fun showToast(msg: String) =
+    private fun showToast(msg: String) {
+        if (!isAdded) return
         Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        tts.destroy()
+        tts?.destroy()
         speechRecognizer?.destroy()
         _binding = null
     }

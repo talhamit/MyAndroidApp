@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
+        android:name=".SpeakMateApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -22,7 +23,8 @@
         <activity
             android:name=".ui.splash.SplashActivity"
             android:exported="true"
-            android:theme="@style/Theme.SpeakMate.Splash">
+            android:theme="@style/Theme.SpeakMate.Splash"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -33,7 +35,9 @@
         <activity
             android:name=".ui.home.MainActivity"
             android:exported="false"
-            android:theme="@style/Theme.SpeakMate" />
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.SpeakMate"
+            android:windowSoftInputMode="adjustResize" />
 
     </application>
 

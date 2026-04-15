@@ -10,8 +10,11 @@ import com.speakmate.app.R
 import com.speakmate.app.databinding.ActivityMainBinding
 
 /**
- * Single-activity host.
- * All screens are Fragments navigated via the Navigation Component.
+ * Single-activity host. All screens are Fragments navigated via Navigation Component.
+ *
+ * FIX #4: With NoActionBar theme we must call setSupportActionBar(binding.toolbar)
+ * BEFORE setupActionBarWithNavController, and the toolbar must be in the layout.
+ * This was already correct — keeping as-is but adding null-safety guard.
  */
 class MainActivity : AppCompatActivity() {
 
@@ -23,16 +26,16 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Set up Navigation
+        // Register the Toolbar as the support action bar
+        setSupportActionBar(binding.toolbar)
+
+        // Set up Navigation Component
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
 
-        // Top-level destinations (no back arrow on these)
-        val appBarConfig = AppBarConfiguration(
-            setOf(R.id.homeFragment)
-        )
-        setSupportActionBar(binding.toolbar)
+        // Only the Home screen has no back arrow
+        val appBarConfig = AppBarConfiguration(setOf(R.id.homeFragment))
         setupActionBarWithNavController(navController, appBarConfig)
     }
 

@@ -25,7 +25,8 @@ import com.speakmate.app.viewmodel.ViewModelFactory
 
 /**
  * Speaking Practice screen.
- * Shows a sentence → user speaks → highlights mistakes word-by-word.
+ * FIX #8: TTS callbacks now post to main thread before touching views,
+ * preventing crashes when callbacks fire after fragment detaches.
  */
 class PracticeFragment : Fragment() {
 
@@ -36,7 +37,7 @@ class PracticeFragment : Fragment() {
         ViewModelFactory(requireActivity().application)
     }
 
-    private lateinit var tts: TextToSpeechHelper
+    private var tts: TextToSpeechHelper? = null
     private var speechRecognizer: SpeechRecognizerHelper? = null
 
     override fun onCreateView(
@@ -49,36 +50,33 @@ class PracticeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Initialise TTS
+        // TTS — guard binding access with _binding != null check
         tts = TextToSpeechHelper(
             requireContext(),
-            onDone   = { binding.btnListen.isEnabled = true },
-            onStart  = { binding.btnListen.isEnabled = false }
+            onDone  = { view.post { if (_binding != null) binding.btnListen.isEnabled = true } },
+            onStart = { view.post { if (_binding != null) binding.btnListen.isEnabled = false } }
         )
 
-        // Initialise Speech Recognizer
+        // Speech Recognizer
         if (SpeechRecognizerHelper.isAvailable(requireContext())) {
             speechRecognizer = SpeechRecognizerHelper(
                 context         = requireContext(),
-                onResult        = { text -> viewModel.onSpeechResult(text) },
-                onPartialResult = { partial -> viewModel.onPartialResult(partial) },
-                onError         = { msg -> showToast(msg) },
-                onStateChange   = { listening -> viewModel.onListeningStateChanged(listening) }
+                onResult        = { text -> view.post { if (_binding != null) viewModel.onSpeechResult(text) } },
+                onPartialResult = { partial -> view.post { if (_binding != null) viewModel.onPartialResult(partial) } },
+                onError         = { msg -> view.post { if (_binding != null) showToast(msg) } },
+                onStateChange   = { listening -> view.post { if (_binding != null) viewModel.onListeningStateChanged(listening) } }
             )
         } else {
             showToast("Speech recognition not available on this device")
         }
 
-        // Load sentences (all categories)
         viewModel.loadSentences()
         observeViewModel()
         setupClickListeners()
     }
 
     private fun observeViewModel() {
-        viewModel.currentIndex.observe(viewLifecycleOwner) {
-            updateSentenceUI()
-        }
+        viewModel.currentIndex.observe(viewLifecycleOwner) { updateSentenceUI() }
 
         viewModel.recognizedText.observe(viewLifecycleOwner) { text ->
             binding.tvRecognizedText.text = text
@@ -93,14 +91,12 @@ class PracticeFragment : Fragment() {
                 return@observe
             }
 
-            // Show score
             binding.tvScore.text       = "${result.accuracyScore.toInt()}%"
             binding.tvGrade.text       = TextComparisonUtil.gradeLabel(result.accuracyScore)
             binding.tvScore.visibility = View.VISIBLE
             binding.tvGrade.visibility = View.VISIBLE
             binding.cardResult.visibility = View.VISIBLE
 
-            // Colour the score
             val colour = when {
                 result.accuracyScore >= 80 -> ContextCompat.getColor(requireContext(), R.color.correct_green)
                 result.accuracyScore >= 50 -> ContextCompat.getColor(requireContext(), R.color.warning_amber)
@@ -108,7 +104,7 @@ class PracticeFragment : Fragment() {
             }
             binding.tvScore.setTextColor(colour)
 
-            // Build word-highlighted spannable
+            // Word-level highlighting
             val ssb = SpannableStringBuilder()
             result.expectedWords.forEachIndexed { i, wordResult ->
                 val spanColour = when (wordResult.status) {
@@ -128,39 +124,27 @@ class PracticeFragment : Fragment() {
         }
 
         viewModel.isListening.observe(viewLifecycleOwner) { listening ->
-            binding.btnMic.isSelected = listening
-            binding.tvMicHint.text = if (listening) "Listening…" else "Tap mic to speak"
-            if (listening) {
-                binding.micPulse.visibility = View.VISIBLE
-            } else {
-                binding.micPulse.visibility = View.GONE
-            }
+            binding.btnMic.isSelected   = listening
+            binding.tvMicHint.text      = if (listening) "Listening…" else "Tap mic to speak"
+            binding.micPulse.visibility = if (listening) View.VISIBLE else View.GONE
         }
     }
 
     private fun setupClickListeners() {
-        // Listen (TTS)
         binding.btnListen.setOnClickListener {
             val sentence = viewModel.currentSentence()?.text ?: return@setOnClickListener
-            tts.speak(sentence)
+            tts?.speak(sentence)
         }
 
-        // Microphone
         binding.btnMic.setOnClickListener {
             if (!PermissionHelper.hasAudioPermission(requireContext())) {
                 PermissionHelper.requestAudioPermission(requireActivity())
                 return@setOnClickListener
             }
-            val recognizer = speechRecognizer ?: return@setOnClickListener
-            if (recognizer.isListening()) {
-                recognizer.stopListening()
-            } else {
-                viewModel.onListeningStateChanged(true)
-                recognizer.startListening()
-            }
+            val sr = speechRecognizer ?: return@setOnClickListener
+            if (sr.isListening()) sr.stopListening() else sr.startListening()
         }
 
-        // Navigation
         binding.btnNext.setOnClickListener     { viewModel.nextSentence() }
         binding.btnPrevious.setOnClickListener { viewModel.previousSentence() }
     }
@@ -170,13 +154,11 @@ class PracticeFragment : Fragment() {
         val list     = viewModel.sentences.value ?: return
         val index    = viewModel.currentIndex.value ?: 0
 
-        binding.tvSentence.text   = sentence.text
-        binding.tvCategory.text   = sentence.category.replaceFirstChar { it.uppercase() }
-        binding.tvProgress.text   = "${index + 1} / ${list.size}"
-        binding.tvTip.text        = sentence.tip
-        binding.tvTip.visibility  = if (sentence.tip.isNotEmpty()) View.VISIBLE else View.GONE
-
-        // Reset result area
+        binding.tvSentence.text  = sentence.text
+        binding.tvCategory.text  = sentence.category.replaceFirstChar { it.uppercase() }
+        binding.tvProgress.text  = "${index + 1} / ${list.size}"
+        binding.tvTip.text       = sentence.tip
+        binding.tvTip.visibility = if (sentence.tip.isNotEmpty()) View.VISIBLE else View.GONE
         binding.cardResult.visibility = View.GONE
         binding.tvScore.visibility    = View.GONE
         binding.tvGrade.visibility    = View.GONE
@@ -184,12 +166,13 @@ class PracticeFragment : Fragment() {
     }
 
     private fun showToast(message: String) {
+        if (!isAdded) return
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        tts.destroy()
+        tts?.destroy()
         speechRecognizer?.destroy()
         _binding = null
     }

@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  FIX #2: Replaced FloatingActionButtons with MaterialButtons throughout.
+  FAB does NOT have a .text property — calling binding.btnRecord.text = "..."
+  caused a compile-time / ClassCastException crash at runtime.
+  All three action buttons are now regular MaterialButtons so .text works.
+-->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -57,19 +63,19 @@
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Steps instruction -->
+    <!-- Status text -->
     <TextView
         android:id="@+id/tvStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Press ▶ to hear the sentence, then 🎙 to record"
+        android:text="Press PLAY to hear the sentence, then RECORD to practice"
         android:textSize="14sp"
         android:textColor="@color/text_secondary"
         android:gravity="center"
         android:lineSpacingMultiplier="1.4"
         android:layout_marginBottom="32dp" />
 
-    <!-- Action buttons row -->
+    <!-- Action buttons — all MaterialButton so .text property works -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -77,84 +83,42 @@
         android:gravity="center"
         android:layout_marginBottom="24dp">
 
-        <!-- Play sentence -->
-        <LinearLayout
+        <!-- Play (TTS) -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPlay"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="56dp"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:layout_marginEnd="6dp"
+            android:text="▶ Play"
+            android:textSize="14sp"
+            app:backgroundTint="@color/accent_teal"
+            app:cornerRadius="12dp" />
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/btnPlay"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@android:drawable/ic_media_play"
-                app:backgroundTint="@color/accent_teal"
-                app:tint="@color/white"
-                app:fabSize="normal" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Play"
-                android:textSize="13sp"
-                android:textColor="@color/text_secondary" />
-        </LinearLayout>
-
-        <!-- Record -->
-        <LinearLayout
+        <!-- Record / Stop -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRecord"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="56dp"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnRecord"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="🎙 Record"
-                    app:cornerRadius="28dp"
-                    app:backgroundTint="@color/mic_active"
-                    android:textColor="@color/white" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="🎙 Record"
-                android:textSize="13sp"
-                android:textColor="@color/text_secondary" />
-        </LinearLayout>
+            android:layout_marginHorizontal="6dp"
+            android:text="🎙 Record"
+            android:textSize="14sp"
+            app:backgroundTint="@color/mic_active"
+            app:cornerRadius="12dp" />
 
         <!-- Replay recording -->
-        <LinearLayout
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnReplay"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="56dp"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/btnReplay"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@android:drawable/ic_media_rew"
-                app:backgroundTint="@color/warning_amber"
-                app:tint="@color/white"
-                app:fabSize="normal"
-                android:enabled="false" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Play Back"
-                android:textSize="13sp"
-                android:textColor="@color/text_secondary" />
-        </LinearLayout>
+            android:layout_marginStart="6dp"
+            android:text="↩ Replay"
+            android:textSize="14sp"
+            app:backgroundTint="@color/warning_amber"
+            app:cornerRadius="12dp"
+            android:enabled="false" />
 
     </LinearLayout>
 
